@@ -161,6 +161,11 @@ public class FlashView extends FrameLayout {
         }
     }
     
+    /**
+     * @description 设置数据
+     * @date 2015年7月31日
+     * @param mList
+     */
     public void setData(List<BaseModel> mList) {
         
         mActualItem = mList == null ? 0 : mList.size();
@@ -184,7 +189,7 @@ public class FlashView extends FrameLayout {
                 return false;
             }
         });
-        // startSwitch(5000, 3000);
+         startSwitch(5000, 3000);
     }
     
     /** 启动轮播效果（默认启动） */
@@ -193,7 +198,7 @@ public class FlashView extends FrameLayout {
     }
     
     /** 关闭轮播计时器 */
-    public void caSwitch() {
+    public void cancelSwitch() {
         if (null != mTimer) {
             mTimer.cancel();
         }
