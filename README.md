@@ -1,0 +1,2 @@
+# FlashView
+一个可以基于viewPaper可以循环切换的轮播广告控件
