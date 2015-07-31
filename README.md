@@ -33,8 +33,10 @@
     	super.onDestroy();
     }
 
-通过这两步，便可以为你的应用加上轮播广告，下面来看看效果
 
+通过这两步，便可以为你的应用加上轮播广告，下面来看看效果  
+
+![Aaron Swartz](https://github.com/tanxiaoluo/FlashView/raw/master/screen_shot/screenshot_1.gif)
 
 ### 自定义加载图片的方式 ###
 > 后续这部分会优化
