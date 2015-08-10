@@ -39,16 +39,15 @@
 ![Aaron Swartz](https://github.com/tanxiaoluo/FlashView/raw/master/screen_shot/screenshot_1.gif)
 
 ### 自定义加载图片的方式 ###
-> 后续这部分会优化
         
 
-    flashView.setloadImageInterFace(new ImageInterFace() {
+    flashView.setloadImageInterFace(new ImageLoadInterFace() {
 	    @Override
-	    public void loadImage(ImageView iv, int position, String url) {
-	    	//TODO 加载你的图片
+            public <T> View loadImage(LayoutInflater mInflater,ViewGroup container, T model, final int position) {
+	    	//TODO 加载你的布局
 		}
-	   });
-实现ImageInterFace这个接口去实现你自己加载图片的方式，目前加载图片用的是picasso库
+	    });
+实现ImageLoadInterFace这个接口去实现你自己加载图片的方式，如果不调用这个方法将会采用默认的实现，目前加载图片用的是picasso库
 
 
 
