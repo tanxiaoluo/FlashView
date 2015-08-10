@@ -3,7 +3,7 @@
  * @文件名：BaseModel.java    
  * @版本信息：
  * @日期：2015年7月30日    
- * @Copyright 2015 www.517na.com Inc. All rights reserved.         
+ * @Copyright 2015  Inc. All rights reserved.         
  */
 package com.example.flashviewdemo.model;
 

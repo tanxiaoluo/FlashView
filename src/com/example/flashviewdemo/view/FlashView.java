@@ -3,7 +3,7 @@
  * @文件名：FlashView.java
  * @版本信息：
  * @日期：2015年7月30日
- * @Copyright 2015 www.517na.com Inc. All rights reserved.
+ * @Copyright 2015 Inc. All rights reserved.
  */
 package com.example.flashviewdemo.view;
 
@@ -46,9 +46,10 @@ import com.squareup.picasso.Picasso;
  */
 public class FlashView extends FrameLayout {
     
-    /** 轮播广告最大项 */
+    /** 轮播广告最大项  */
     private int mMaxItem;
     
+    /** 轮播广告实际大小 */
     private int mActualItem;
     
     /** 当前的位置 */
@@ -57,6 +58,7 @@ public class FlashView extends FrameLayout {
     /** 用户是否在滑动 */
     private boolean mIsUserTouched = false;
     
+    /** 小圆点 */
     private List<ImageView> mIvs;
     
     /** 存放切换小圆点的布局,当然你也可以在这里面放一个textView之类的 */
@@ -78,7 +80,7 @@ public class FlashView extends FrameLayout {
         }
     };
     
-    private ImageInterFace mImageInterFace;
+    private ImageLoadInterFace mLoadInterFace;
     
     public FlashView(Context context, AttributeSet attrs, int defStyleAttr) {
         super(context, attrs, defStyleAttr);
@@ -97,8 +99,8 @@ public class FlashView extends FrameLayout {
     }
     
     /** 设置加载图片的东西 */
-    public void setloadImageInterFace(ImageInterFace loadImageInterFace) {
-        this.mImageInterFace = loadImageInterFace;
+    public void setloadImageInterFace(ImageLoadInterFace mLoadInterFace) {
+        this.mLoadInterFace = mLoadInterFace;
     }
     
     /**
@@ -116,11 +118,16 @@ public class FlashView extends FrameLayout {
             }
         };
         
-        if (null == mImageInterFace) {
-            mImageInterFace = new ImageInterFace() {
+        if (null == mLoadInterFace) {
+            mLoadInterFace = new ImageLoadInterFace() {
                 
                 @Override
-                public void loadImage(ImageView iv, final int position, String url) {
+                public <T> View loadImage(LayoutInflater mInflater,ViewGroup container, T model, final int position) {
+                    View view = mInflater.inflate(R.layout.viewpaper_item, container, false);
+                    ImageView iv = (ImageView) view.findViewById(R.id.iv_viewpager);
+                    BaseModel baseModel = (BaseModel) model;
+                    String url = baseModel.mImageUrl;
+                    container.addView(view);
                     if (!TextUtils.isEmpty(url)) {
                         Picasso.with(mContext).load(url).placeholder(R.drawable.ic_onload).error(R.drawable.ic_nodata).into(iv);
                     }
@@ -135,7 +142,7 @@ public class FlashView extends FrameLayout {
                             Log.d("TL", "第" + position + "张");
                         }
                     });
-                    
+                    return view;
                 }
             };
         }
@@ -214,16 +221,17 @@ public class FlashView extends FrameLayout {
      * @修改时间：2015年7月30日 下午2:44:54
      * @修改备注：
      * @version
+     * @param <T>
      */
-    class MyPagerAdapter extends PagerAdapter implements OnPageChangeListener {
+    class MyPagerAdapter<T> extends PagerAdapter implements OnPageChangeListener {
         
         private LayoutInflater mInflater;
         
-        private List<BaseModel> mList;
+        private List<T> mList;
         
-        private BaseModel mModel;
+        private T mModel;
         
-        public MyPagerAdapter(Context context, List<BaseModel> mList) {
+        public MyPagerAdapter(Context context, List<T> mList) {
             mInflater = LayoutInflater.from(context);
             this.mList = mList;
         }
@@ -246,16 +254,8 @@ public class FlashView extends FrameLayout {
         @Override
         public Object instantiateItem(ViewGroup container, int position) {
             position %= mActualItem;
-            
-            View view = mInflater.inflate(R.layout.viewpaper_item, container, false);
-            ImageView iv = (ImageView) view.findViewById(R.id.iv_viewpager);
-            
             mModel = mList.get(position);
-            mImageInterFace.loadImage(iv, position, mModel.mImageUrl);
-            
-            container.addView(view);
-            
-            return view;
+            return mLoadInterFace.loadImage(mInflater, container, mModel, position);
         }
         
         @Override
@@ -289,7 +289,7 @@ public class FlashView extends FrameLayout {
         }
         
         /**
-         * @description
+         * @description 
          * @date 2015年7月30日
          */
         private void setDotView(int position) {
@@ -315,5 +315,9 @@ public class FlashView extends FrameLayout {
      */
     public interface ImageInterFace {
         void loadImage(ImageView iv, int position, String url);
+    }
+    
+    public interface ImageLoadInterFace{
+        <T> View loadImage(LayoutInflater mInflater,ViewGroup container, T model, int position);
     }
 }
